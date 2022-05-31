@@ -148,7 +148,8 @@ class VisualizerCallback(Callback):
             _dataloader_idx (int): Index of the dataloader that yielded the current batch (unused).
         """
         for visualizer in self.generate_visualizer(outputs):
-            visualizer.show()
+            file_path = Path(outputs['image_path'][-1])
+            visualizer.save(Path(_trainer.default_root_dir) / "inference" / file_path.parent.name / file_path.name)
 
     def on_test_batch_end(
         self,
