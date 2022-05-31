@@ -51,7 +51,8 @@ def infer():
 
     dataset = InferenceDataset(args.image_path, image_size=tuple(config.dataset.image_size))
     dataloader = DataLoader(dataset)
-    trainer.predict(model=model, dataloaders=[dataloader])
+    ckpt_path = Path(f"{config.project.path}/{config.model.weight_file}")
+    trainer.predict(model=model, dataloaders=[dataloader], ckpt_path=str(ckpt_path))
 
 
 if __name__ == "__main__":
