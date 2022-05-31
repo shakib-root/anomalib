@@ -15,9 +15,10 @@
 # and limitations under the License.
 
 from pathlib import Path
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 import albumentations as A
+from torch import Tensor
 from torch.utils.data.dataset import Dataset
 
 from anomalib.data.utils import get_image_filenames, read_image
@@ -58,10 +59,18 @@ class InferenceDataset(Dataset):
         """Get the number of images in the given path."""
         return len(self.image_filenames)
 
-    def __getitem__(self, index: int) -> Any:
-        """Get the image based on the `index`."""
+    def __getitem__(self, index: int) -> Dict[str, Union[str, Tensor]]:
+        """Get dataset item for the index ``index``.
+        Args:
+            index (int): Index to get the item.
+        Returns:
+            Dict[str, Union[str, Tensor]]: Dict containing image path, image tensor.
+        """
         image_filename = self.image_filenames[index]
         image = read_image(path=image_filename)
         pre_processed = self.pre_process(image=image)
 
-        return pre_processed
+        return {
+            "image": pre_processed["image"],
+            "image_path": image_filename
+        }
